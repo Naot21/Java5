@@ -14,12 +14,16 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 public class UserBean {
     private Integer id;
+
     @NotBlank(message = "Không được để trống Username")
     private String username;
 
     @NotBlank(message = "Không được để trống Password")
     @Length(min = 6, message = "Password hơn 6 ký tự")
     private String password;
+
+    @NotBlank(message = "Không được để trống Confirm Password")
+    private String rePassword;  // Đổi tên cho đúng với form
 
     @NotBlank(message = "Không được để trống Email")
     @Email(message = "Email phải đúng định dạng")
@@ -35,10 +39,10 @@ public class UserBean {
 
     public String isAvatarError() {
         if (avatar.isEmpty()) {
-            return "Avatar bắt buộc phai them";
+            return "Avatar bắt buộc phải thêm";
         }
         if (avatar.getSize() > (20 * 1024 * 1024)) {
-            return "Dung lương ảnh dưới 20MB";
+            return "Dung lượng ảnh dưới 20MB";
         }
         return null;
     }

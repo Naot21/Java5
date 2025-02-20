@@ -2,7 +2,7 @@ package fpl.asm_java5.Controller;
 
 import fpl.asm_java5.Entities.Category;
 import fpl.asm_java5.Service.CategoryService;
-import fpl.asm_java5.beans.CategoryBean;
+import fpl.asm_java5.Beans.CategoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

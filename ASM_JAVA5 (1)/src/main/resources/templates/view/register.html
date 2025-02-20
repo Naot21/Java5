@@ -3,70 +3,228 @@
 
 <head>
     <title>User Registration</title>
-    <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-    <!-- Bootstrap CSS v5.3.2 -->
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+
+    <style>
+        body {
+            background: #f0f0f0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .card {
+            max-width: 600px;
+            width: 100%;
+            margin: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            background: #ffffff;
+            padding: 20px;
+        }
+
+        .card-header {
+            background: linear-gradient(to right, #333, #555);
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Layout hàng ngang giữa avatar và input */
+        .row-align {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* Vùng avatar */
+        .avatar-container {
+            flex-shrink: 0;
+        }
+
+        .avatar-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid #ccc;
+            object-fit: cover;
+            background: #ddd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+
+        .form-label {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-control {
+            width: 100%;
+            border-radius: 25px;
+            border: 1px solid #ccc;
+            padding: 12px;
+            font-size: 1rem;
+            transition: box-shadow 0.3s ease-in-out;
+            color: #333;
+        }
+
+        .form-control:focus {
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+            border-color: #333;
+            outline: none;
+        }
+
+        .btn-primary {
+            background-color: #333;
+            border-radius: 25px;
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease-in-out;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background-color: #555;
+            transform: translateY(-2px);
+        }
+
+        .text-muted {
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .text-primary {
+            color: #333;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .text-primary:hover {
+            color: #555;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .row-align {
+                flex-direction: column;
+                align-items: center;
+            }
+            .avatar-container {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
 </head>
 
-<body class="bg-light">
-<header class="bg-primary py-3 text-white text-center">
-    <h2>Register User</h2>
-</header>
-<main>
-    <div class="container mt-4">
-        <div class="col-md-6 offset-md-3 p-4 shadow-lg rounded bg-white">
-            <h1 th:text="${option}" class="mb-4 text-center text-primary"></h1>
-            <form action="/registerUser" method="post" enctype="multipart/form-data" th:object="${userError}">
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Username</label>
-                    <input type="text" class="form-control border-primary" name="username" th:value="${user != null ? user.username : ''}" required/>
-                    <small class="text-danger" th:errors="*{username}"></small>
+<body>
+<div class="card">
+    <div class="card-header">Đăng Ký</div>
+
+    <div class="card-body">
+        <form action="/register" method="post" enctype="multipart/form-data" th:object="${userError}">
+            <input type="hidden" name="id" th:if="${user != null}" th:value="${user.id}">
+
+            <!-- Avatar + Username + Password -->
+            <div class="row-align">
+                <!-- Avatar -->
+                <div class="avatar-container">
+                    <div class="avatar-preview">
+                        <img id="avatarPreview" th:src="${user != null && user.avatar != null ? user.avatar : '/images/default-avatar.png'}" alt="Avatar">
+                    </div>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Password</label>
-                    <input type="password" class="form-control border-primary" name="password" required/>
-                    <small class="text-danger" th:errors="*{password}"></small>
-                </div>
+                <!-- Input fields -->
+                <div class="w-100">
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" class="form-control" name="username" th:value="${user != null ? user.username : ''}" placeholder="Nhập username" />
+                        <small class="text-danger" th:errors="*{username}"></small>
+                    </div>
 
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Confirm Password</label>
-                    <input type="password" class="form-control border-primary" name="confirmPassword" required/>
-                    <small class="text-danger" th:errors="*{confirmPassword}"></small>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" th:field="*{password}" placeholder="Nhập mật khẩu" />
+                        <small class="text-danger" th:errors="*{password}"></small>
+                    </div>
                 </div>
+            </div>
 
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Email</label>
-                    <input type="email" class="form-control border-primary" name="email" th:value="${user != null ? user.email : ''}" required/>
-                    <small class="text-danger" th:errors="*{email}"></small>
-                </div>
+            <div class="mb-3">
+                <label class="form-label">Xác nhận mật khẩu</label>
+                <input type="password" class="form-control" th:field="*{rePassword}" placeholder="Nhập lại mật khẩu" />
+                <small class="text-danger" th:errors="*{rePassword}"></small>
+                <small class="text-danger" th:text="${passwordError}"></small>
+            </div>
 
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Name</label>
-                    <input type="text" class="form-control border-primary" name="name" th:value="${user != null ? user.name : ''}" required/>
-                    <small class="text-danger" th:errors="*{name}"></small>
-                </div>
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" name="email" th:value="${user != null ? user.email : ''}" placeholder="Nhập email" />
+                <small class="text-danger" th:errors="*{email}"></small>
+            </div>
 
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Avatar</label>
-                    <input type="file" class="form-control border-primary" name="avatar" />
-                    <small class="text-danger" th:text="${imageError != null ? imageError : ''}"></small>
-                </div>
+            <div class="mb-3">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-control" name="name" th:value="${user != null ? user.name : ''}" placeholder="Nhập họ và tên" />
+                <small class="text-danger" th:errors="*{name}"></small>
+            </div>
 
-                <div class="text-center">
-                    <button type="submit" class="btn btn-primary w-100">Register</button>
-                </div>
-            </form>
-        </div>
+            <div class="mb-3">
+                <label class="form-label">Avatar</label>
+                <input type="file" class="form-control" name="avatar" id="avatarInput" />
+                <small class="text-danger" th:text="${imageError != null ? imageError : ''}"></small>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn-primary">Đăng Ký</button>
+            </div>
+
+            <div class="text-muted mt-3">
+                Bạn đã có tài khoản? <a href="/login" class="text-primary">Đăng nhập ngay</a>
+            </div>
+        </form>
     </div>
+</div>
 
-    <!-- Bootstrap JavaScript Libraries -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-ho+j7jyWK8fNQe+A12TPr+2NpM5L5d8bP3n/6p5t7v6p2O2E2/OcD2/mE5C5D2" crossorigin="anonymous"></script>
+<!-- Script cập nhật avatar -->
+<script>
+    document.getElementById('avatarInput').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('avatarPreview').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

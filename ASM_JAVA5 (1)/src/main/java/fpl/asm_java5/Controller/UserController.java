@@ -32,13 +32,13 @@ public class UserController {
             model.addAttribute("users", userJPA.searchAndSortUsers(keyword.get().trim(), sort.get()));
             model.addAttribute("keyword", keyword.get());
             model.addAttribute("sort", sort.get());
-            return "/Admin/list-user";
+            return "/Admin/list-user.html";
         }
         model.addAttribute("sort", "nosort");
         model.addAttribute("users", userJPA.findAll());
-        return "/Admin/list-user";
+        return "/Admin/list-user.html";
     }
-    @GetMapping("/addUser")
+    @GetMapping("/register")
     public String addUser(Model model, @RequestParam(value = "id") Optional<Integer> id) {
         model.addAttribute("userError", new UserBean());
         if (id.isPresent()) {
@@ -47,14 +47,15 @@ public class UserController {
             userBean.setId(userById.get().getId());
             userBean.setUsername(userById.get().getUsername());
             userBean.setPassword(userById.get().getPassword());
+            userBean.setRePassword((userById.get().getPassword()));
             userBean.setEmail(userById.get().getEmail());
             userBean.setName(userById.get().getName());
             model.addAttribute("option", "Edit User");
             model.addAttribute("user", userBean);
-            return "/Admin/add-user";
+            return "/view/register.html";
         }
         model.addAttribute("option", "Add User");
-        return "/Admin/add-user";
+        return "/view/register.html";
     }
     @GetMapping("/delete-user")
     public String deleteUser(@RequestParam("id") int id){
@@ -64,30 +65,37 @@ public class UserController {
         }
         return "redirect:/list-users";
     }
-    @PostMapping("/addUser")
+    @PostMapping("/register")
     public String handleAddUser(@Valid @ModelAttribute("userError") UserBean userBean, Errors errors, Model model) {
-        if(errors.hasErrors() || userBean.isAvatarError() != null){
+        if (errors.hasErrors() || userBean.isAvatarError() != null) {
             model.addAttribute("userError", userBean);
             model.addAttribute("imageError", userBean.isAvatarError());
             model.addAttribute("user", userBean);
-            return "/Admin/add-user";
+            return "/view/register.html";
         }
-        if(userBean.getId() != null){
+
+        // Kiểm tra xác nhận mật khẩu
+        if (!userBean.getPassword().equals(userBean.getRePassword())) {
+            model.addAttribute("userError", userBean);
+            model.addAttribute("passwordError", "Mật khẩu xác nhận không khớp!");
+            return "/view/register.html";
+        }
+
+        if (userBean.getId() != null) {
             String statusUpdate = userService.update(userBean);
-            if(statusUpdate != null){
-                return "redirect:/list-users";
-            } else {
-                System.out.println(statusUpdate);
+            if (statusUpdate != null) {
+                return "redirect:/login";
             }
         }
+
         String statusInsert = userService.insert(userBean);
-        if(statusInsert != null){
-            return "redirect:/list-users";
-        } else {
-            System.out.println(statusInsert);
+        if (statusInsert != null) {
+            return "redirect:/login";
         }
-        return "redirect:/list-users";
+
+        return "redirect:/login";
     }
+
 
 
 }

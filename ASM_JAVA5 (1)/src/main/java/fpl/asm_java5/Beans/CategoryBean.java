@@ -1,4 +1,4 @@
-package fpl.asm_java5.beans;
+package fpl.asm_java5.Beans;
 
 import lombok.Data;
 import fpl.asm_java5.Entities.Category;

@@ -31,14 +31,14 @@ public class ProductController {
         List<Category> categories = categoryJPA.findAll();
         model.addAttribute("productBean", new ProductBean());
         model.addAttribute("cate", categories);
-        return "/Admin/add-product";
+        return "/Admin/add-product.html";
     }
 
     @GetMapping("/detail-Product")
     public String detailProduct(Model model) {
         List<Product> products = productJPA.findAll();
         model.addAttribute("products", products);
-        return "/Admin/detail-product";
+        return "/Admin/detail-product.html";
     }
     @PostMapping("/addProduct2")
     public String addProduct2(@Valid @ModelAttribute("productBean") ProductBean productBean, Errors errors, Model model) {
@@ -46,7 +46,7 @@ public class ProductController {
             List<Category> categories = categoryJPA.findAll();
             model.addAttribute("cate", categories);
             model.addAttribute("errorImage", productBean.errorImage());
-            return "/Admin/add-product";
+            return "/Admin/add-product.html";
         }
         productService.insertProduct(productBean);
         return "redirect:/detail-Product";
@@ -81,7 +81,7 @@ public class ProductController {
         List<Category> categories = categoryJPA.findAll();
         model.addAttribute("productBean", productBean);
         model.addAttribute("cate", categories);
-        return "/Admin/edit-product"; // Chuyển tới form sửa sản phẩm
+        return "/Admin/edit-product.html"; // Chuyển tới form sửa sản phẩm
     }
 
     // Xử lý form sửa sản phẩm
@@ -91,7 +91,7 @@ public class ProductController {
             List<Category> categories = categoryJPA.findAll();
             model.addAttribute("cate", categories);
             model.addAttribute("errorImage", productBean.errorImage());
-            return "/Admin/edit-product"; // Nếu có lỗi, quay lại trang sửa
+            return "/Admin/edit-product.html"; // Nếu có lỗi, quay lại trang sửa
         }
 
         productService.updateProduct(productBean); // Cập nhật sản phẩm
@@ -111,7 +111,7 @@ public class ProductController {
         // Lấy danh sách sản phẩm theo danh mục
         List<Product> products = productService.findProductsByCategory(categoryId);
         model.addAttribute("products", products);
-        return "/view/productByCate";
+        return "/view/productByCate.html";
     }
 
 
